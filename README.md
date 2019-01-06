@@ -30,11 +30,34 @@ quando a superfície de tempo de trânsito aproximada se ajusta da melhor maneir
 à superfície de tempo de trânsito modelada.
 
 O procedimento descrito acima é realizado automaticamente com o SConstruct (script do MADAGASCAR), bastando a adição dos 
-programas ao pacote MADAGASCAR já instalado na máquina do usuário.
+programas ao pacote MADAGASCAR já instalado na máquina do usuário. A vantagem do SConstruct é que ele pode ser readaptado
+para outros problemas, retirando partes do script que funcionam de maneira independente, como a etapa de modelagem e
+simulação da aquisição sísmica.
 
 ### Resumo:
 
-![https://raw.githubusercontent.com/Dirack/Images/master/data.jpeg](https://raw.githubusercontent.com/Dirack/Images/master/data.jpeg)
+Na etapa de modelagem, simulamos a aquisição de dados sísmicos a partir do modelo de um refletor gaussiano 
+em um meio de variação linear de velocidade (a velocidade crece linearmente com a profundidade). A aquisição
+é simulada diretamente no domínio meio-afastamento x CMP x tempo (um domínio 3D chamado genericamente de cubo de dados).
+
+![](https://raw.githubusercontent.com/Dirack/Images/master/dome.jpeg)
+
+![](https://raw.githubusercontent.com/Dirack/Images/master/data.jpeg)
+
+Depois, extraímos a superfície de tempo de trânsito modelada do cubo de dados, obtida na etapa anterior, e a representamos 
+em um mapa 2D.
+
+![](https://raw.githubusercontent.com/Dirack/Images/master/pick.jpeg)
+
+Finalmente, o algoritmo VFSA produz o melhor ajuste entre a superfície de tempo de trânsito modelada e uma superfície de
+tempo de trânsito aproximada definida pelo usuário: Cada aproximação de tempo de trânsito CRS é uma equação que define
+a superfície de tempo de trânsito CRS aproximada dados as coordenadas CMP e meio-afastamento (que sao as mesmas para a 
+superfície modelada e aproximada) e três parâmetros do CRS (RN, RNIP e BETA), de modo que ao variar estes parâmetros,
+a superfície CRS aproximada se torna semelhante ou difere da superfície modelada.
+
+Assim, o algoritmo VFSA busca obter o melhor ajuste possível entre a superfície de tempo de trânsito modelada e a superfície
+de tempo de trânsito aproximada, e isso implica em obter os parâmetros RN, RNIP e BETA que melhor produzem tal ajuste. O
+critério de convergência e a formulação matemática do algoritmo e das aproximações são detalhados nas referências a seguir.
 
 ### Referências:
 
