@@ -55,6 +55,8 @@ a superfície de tempo de trânsito CRS aproximada dados as coordenadas CMP e me
 superfície modelada e aproximada) e três parâmetros do CRS (RN, RNIP e BETA), de modo que ao variar estes parâmetros,
 a superfície CRS aproximada se torna semelhante ou difere da superfície modelada.
 
+![](https://raw.githubusercontent.com/Dirack/Images/master/err-0.jpeg)
+
 Assim, o algoritmo VFSA busca obter o melhor ajuste possível entre a superfície de tempo de trânsito modelada e a superfície
 de tempo de trânsito aproximada, e isso implica em obter os parâmetros RN, RNIP e BETA que melhor produzem tal ajuste. O
 critério de convergência e a formulação matemática do algoritmo e das aproximações são detalhados nas referências a seguir.
