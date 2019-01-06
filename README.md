@@ -39,17 +39,14 @@ programas ao pacote MADAGASCAR já instalado na máquina do usuário.
 * A convergência entre as superfícies de tempo de trânsito 
 é atingida pelo algoritmo de otimização global Very Fast Simulated Aneeling (VFSA), descrito em detalhes em: 
 
-INGBER, L. Very fast simulated re-annealing. Math1. Comput. Modelling, v. 12, p.967–973, 1989.
+		INGBER, L. Very fast simulated re-annealing. Math1. Comput. Modelling, v. 12, p.967–973, 1989.
 
 * Referências sobre as aproximações de tempo de trânsito CRS utilizadas:
 
->FOMEL, S.; KAZINNIK, R. Nonhyperbolic common reflection surface. Geophysical Prospecting, v. 61, 
-	p. 21–27, 2013.
+		FOMEL, S.; KAZINNIK, R. Nonhyperbolic common reflection surface. Geophysical Prospecting, v. 61, p. 21–27, 2013.
 
->HöCHT, G. Traveltime approximations for 2D and 3D media and kinematic wavefield attributes. 
-Tese (Doutorado) — Faculdade de Física Karlsruhe (TH) genehmigte, 2002.
+		HöCHT, G. Traveltime approximations for 2D and 3D media and kinematic wavefield attributes. Tese (Doutorado) — Faculdade de Física Karlsruhe (TH) genehmigte, 2002.
 
->NEVES, R. Aproximações não hiperbólicas do tempo de trânsito utilizando aproximantes de Padé. 
-Dissertação (Mestrado) — Universidade Federal do Pará - UFPa, Belém - PA, 2017.
+		NEVES, R. Aproximações não hiperbólicas do tempo de trânsito utilizando aproximantes de Padé. Dissertação (Mestrado) — Universidade Federal do Pará - UFPa, Belém - PA, 2017.
 
->JAGER, R. et al. Common-reflection-surface stack: image and attributes. Geophysics,v. 66, p. 97–109, 2001.
+		JAGER, R. et al. Common-reflection-surface stack: image and attributes. Geophysics,v. 66, p. 97–109, 2001.
