@@ -95,10 +95,10 @@ float sinal(float s) {
 float fomel(float t0, float m0, float h0, float x0, float v0, float R_N, float R_NIP, float BETA, int nh, float dh, int nm, float dm, float **t){ 
 /*< Semblance da aproximação de tempo de trânsito do CRS não hiperbólico (FOMEL; KAZINNIK, 2013) >*/
 
-		float ampt; // amplitude da amostra
-		float amp2t; // amplitude da amostra ao quadrado
-		float amp; // soma das amplitudes das amostras
-		float amp2; // soma das amplitudes da amostras ao quadrado
+		float ampt=0.; // amplitude da amostra
+		float amp2t=0.; // amplitude da amostra ao quadrado
+		float amp=0.; // soma das amplitudes das amostras
+		float amp2=0.; // soma das amplitudes da amostras ao quadrado
 		int M=0; // contador de amostras
 		float semb=0; // semblance
 		int im, ih; // índice da amostra no CMP e no meio afastamento
@@ -132,6 +132,9 @@ float fomel(float t0, float m0, float h0, float x0, float v0, float R_N, float R
 				teta=sqrt(Fdmenos*Fdmais);			
 				teta=(Fd+c1*h*h+teta);
 				teta=sqrt(teta/2);
+
+				/* Restrição para não permitir tempo negativo */
+				if ( teta < 0.) teta=0.;
 				
 				/* incremento a quantidade de amostras */
 				M++;
@@ -173,10 +176,10 @@ float fomel(float t0, float m0, float h0, float x0, float v0, float R_N, float R
 float jager(float t0, float m0, float h0, float x0, float v0, float R_N, float R_NIP, float BETA, int nh, float dh,  int nm,  float dm, float **t) {
 /*< Semblance da aproximação do CRS hiperbólico (JAGER et al., 2001) >*/	
 		
-		float ampt; // amplitude da amostra
-		float amp2t; // amplitude da amostra ao quadrado
-		float amp; // soma das amplitudes das amostras
-		float amp2; // soma das amplitudes da amostras ao quadrado
+		float ampt=0.; // amplitude da amostra
+		float amp2t=0.; // amplitude da amostra ao quadrado
+		float amp=0.; // soma das amplitudes das amostras
+		float amp2=0.; // soma das amplitudes da amostras ao quadrado
 		int M=0; // contador de amostras
 		float semb=0; // semblance
 		int im, ih; // índice da amostra no CMP e no meio afastamento
@@ -208,6 +211,9 @@ float jager(float t0, float m0, float h0, float x0, float v0, float R_N, float R
 					
 				teta=(Fd+b2*h*h);
 				teta=sqrt(teta);
+
+				/* Restrição para não permitir tempo negativo */
+				if ( teta < 0.) teta=0.;
 				
 				/* Quantidade de amostras */
 				M++;
@@ -249,10 +255,10 @@ float jager(float t0, float m0, float h0, float x0, float v0, float R_N, float R
 float germam_t(float t0, float m0, float h0, float x0, float v0, float R_N, float R_NIP, float BETA, int nh, float dh,  int nm,  float dm, float **t) {
 /*< Semblance da aproximação do CRS Quarta ordem parabólico (HöCHT, 2002) >*/	
 
-		float ampt; // amplitude da amostra
-		float amp2t; // amplitude da amostra ao quadrado
-		float amp; // soma das amplitudes das amostras
-		float amp2; // soma das amplitudes da amostras ao quadrado
+		float ampt=0.; // amplitude da amostra
+		float amp2t=0.; // amplitude da amostra ao quadrado
+		float amp=0.; // soma das amplitudes das amostras
+		float amp2=0.; // soma das amplitudes da amostras ao quadrado
 		int M=0; // contador de amostras
 		float semb=0; // semblance
 		int im, ih; // índice da amostra no CMP e no meio afastamento
@@ -289,6 +295,9 @@ float germam_t(float t0, float m0, float h0, float x0, float v0, float R_N, floa
 				g4=-m*m*m*m*s7;
 				g5=h*h*h*h*s8;
 				teta=g1+g2+g3+g4+g5;
+
+				/* Restrição para não permitir tempo negativo */
+				if ( teta < 0.) teta=0.;
 				
 				/* Incremente a Quantidade de amostras */
 				M++;
@@ -329,10 +338,10 @@ float germam_t(float t0, float m0, float h0, float x0, float v0, float R_N, floa
 float germam_t2(float t0, float m0, float h0, float x0, float v0, float R_N, float R_NIP, float BETA, int nh, float dh,  int nm,  float dm, float **t) {
 /*< Semblance da aproximação do CRS quarta ordem hiperbólico (HöCHT, 2002) >*/	
 
-		float ampt; // amplitude da amostra
-		float amp2t; // amplitude da amostra ao quadrado
-		float amp; // soma das amplitudes das amostras
-		float amp2; // soma das amplitudes da amostras ao quadrado
+		float ampt=0.; // amplitude da amostra
+		float amp2t=0.; // amplitude da amostra ao quadrado
+		float amp=0.; // soma das amplitudes das amostras
+		float amp2=0.; // soma das amplitudes da amostras ao quadrado
 		int M=0; // contador de amostras
 		float semb=0; // semblance
 		int im, ih; // índice da amostra no CMP e no meio afastamento
@@ -372,6 +381,9 @@ float germam_t2(float t0, float m0, float h0, float x0, float v0, float R_N, flo
 				teta=g1+g2+g3+g4+g5+g6;
 				teta=sqrt(teta);
 				
+				/* Restrição para não permitir tempo negativo */
+				if ( teta < 0.) teta=0.;
+
 				/* Incremente a quantidade de amostras */
 				M++;
 				
@@ -412,10 +424,10 @@ float germam_t2(float t0, float m0, float h0, float x0, float v0, float R_N, flo
 float germam_tshift(float t0, float m0, float h0, float x0, float v0, float R_N, float R_NIP, float BETA, int nh, float dh,  int nm,  float dm, float **t){
 /*< Semblance da aproximação do CRS quarta ordem deslocado (HöCHT, 2002) >*/	
 
-		float ampt; // amplitude da amostra
-		float amp2t; // amplitude da amostra ao quadrado
-		float amp; // soma das amplitudes das amostras
-		float amp2; // soma das amplitudes da amostras ao quadrado
+		float ampt=0.; // amplitude da amostra
+		float amp2t=0.; // amplitude da amostra ao quadrado
+		float amp=0.; // soma das amplitudes das amostras
+		float amp2=0.; // soma das amplitudes da amostras ao quadrado
 		int M=0; // contador de amostras
 		float semb=0; // semblance
 		int im, ih; // índice da amostra no CMP e no meio afastamento
@@ -456,7 +468,10 @@ float germam_tshift(float t0, float m0, float h0, float x0, float v0, float R_N,
 				teta=g1+g2+g3+g4+g5;
 				teta=sqrt(teta);
 				teta=teta+s10;
-						
+
+				/* Restrição para não permitir tempo negativo */
+				if ( teta < 0.) teta=0.;		
+				
 				/* Incremente a quantidade de amostras */
 				M++;
 				
@@ -484,6 +499,7 @@ float germam_tshift(float t0, float m0, float h0, float x0, float v0, float R_N,
 			}
 		
 	}
+
 		/* restrição: garantir que não haja divisão por zero */
 		if(amp2==0 || amp==0)		
 		       return semb=0;
@@ -496,10 +512,10 @@ float germam_tshift(float t0, float m0, float h0, float x0, float v0, float R_N,
 float pade_th(float t0, float m0, float h0, float x0, float v0, float R_N, float R_NIP, float BETA, int nh, float dh,  int nm,  float dm, float **t){
 /*< Semblance da aproximação do CRS Padé parabólico expansão em h (NEVES, 2017) >*/
 
-		float ampt; // amplitude da amostra
-		float amp2t; // amplitude da amostra ao quadrado
-		float amp; // soma das amplitudes das amostras
-		float amp2; // soma das amplitudes da amostras ao quadrado
+		float ampt=0.; // amplitude da amostra
+		float amp2t=0.; // amplitude da amostra ao quadrado
+		float amp=0.; // soma das amplitudes das amostras
+		float amp2=0.; // soma das amplitudes da amostras ao quadrado
 		int M=0; // contador de amostras
 		float semb=0; // semblance
 		int im, ih; // índice da amostra no CMP e no meio afastamento
@@ -518,13 +534,13 @@ float pade_th(float t0, float m0, float h0, float x0, float v0, float R_N, float
 		float s8=cos(BETA)*cos(BETA)*(4*R_NIP*sin(BETA)*sin(BETA)-R_N*cos(BETA)*cos(BETA))/(4*v0*R_NIP*R_NIP*R_NIP*R_N);
 		float CO,C1,C2;
 								
-		for (im=im0-50; im < im0+50; im++){
+		for (im=im0-mMAX; im < im0+mMAX; im++){
 			
 			m=im*dm+x0; //coordenada do CMP em relação a origem x0
 	
 			m=m-m0; // distância em relação ao CMP central m0
 			
-			for(ih=0;ih<51;ih++){
+			for(ih=0;ih<hMAX;ih++){
 			
 				h=ih*dh+h0; // coordenada do meio afastamento
 										
@@ -533,9 +549,11 @@ float pade_th(float t0, float m0, float h0, float x0, float v0, float R_N, float
 				C1=s5-m*m*s6-m*s7;
 				C2=s8;
 				
-				
 				teta=(h*h*C1)/(1+h*h*(-C2/C1));
 				teta=CO + teta;
+
+				/* Restrição para não permitir tempo negativo */
+				if ( teta < 0.) teta=0.;
 				
 				/* Incremente a quantidade de amostras */
 				M++;
@@ -576,10 +594,10 @@ float pade_th(float t0, float m0, float h0, float x0, float v0, float R_N, float
 float pade_tm(float t0, float m0, float h0, float x0, float v0, float R_N, float R_NIP, float BETA, int nh, float dh,  int nm,  float dm, float **t) {
 /*< Semblance da aproximação do CRS Padé parabólico expansão em m (NEVES, 2017) >*/	
 
-		float ampt; // amplitude da amostra
-		float amp2t; // amplitude da amostra ao quadrado
-		float amp; // soma das amplitudes das amostras
-		float amp2; // soma das amplitudes da amostras ao quadrado
+		float ampt=0.; // amplitude da amostra
+		float amp2t=0.; // amplitude da amostra ao quadrado
+		float amp=0.; // soma das amplitudes das amostras
+		float amp2=0.; // soma das amplitudes da amostras ao quadrado
 		int M=0; // contador de amostras
 		float semb=0; // semblance
 		int im, ih; // índice da amostra no CMP e no meio afastamento
@@ -599,13 +617,13 @@ float pade_tm(float t0, float m0, float h0, float x0, float v0, float R_N, float
 		float s8=-((cos(BETA)*cos(BETA)*(5*cos(BETA)*cos(BETA)-4))/(4*v0*R_N*R_N*R_N));
 		float CO,C1,C2,C3,C4,q1,q2,po,p1,p2,pp,qq;
 								
-		for (im=im0-50; im < im0+50; im++){
+		for (im=im0-mMAX; im < im0+mMAX; im++){
 			
 			m=im*dm+x0; //coordenada do CMP em relação a origem x0
 	
 			m=m-m0; // distância em relação ao CMP central m0
 			
-			for(ih=0;ih<51;ih++){
+			for(ih=0;ih<hMAX;ih++){
 			
 				h=ih*dh+h0; // coordenada do meio afastamento
 										
@@ -626,8 +644,10 @@ float pade_tm(float t0, float m0, float h0, float x0, float v0, float R_N, float
 				qq=1+q1*m+q2*m*m;
 				
 				teta=pp/qq;
+
+				/* Restrição para não permitir tempo negativo */
+				if ( teta < 0.) teta=0.;
 			
-				
 				/* Incremente a quantidade de amostras */
 				M++;
 				
@@ -667,10 +687,10 @@ float pade_tm(float t0, float m0, float h0, float x0, float v0, float R_N, float
 float pade_t2h(float t0, float m0, float h0, float x0, float v0, float R_N, float R_NIP, float BETA, int nh, float dh,  int nm,  float dm, float **t) {
 /*< Semblance da aproximação do CRS Padé hiperbólico expansão em h (NEVES, 2017) >*/
 
-		float ampt; // amplitude da amostra
-		float amp2t; // amplitude da amostra ao quadrado
-		float amp; // soma das amplitudes das amostras
-		float amp2; // soma das amplitudes da amostras ao quadrado
+		float ampt=0.; // amplitude da amostra
+		float amp2t=0.; // amplitude da amostra ao quadrado
+		float amp=0.; // soma das amplitudes das amostras
+		float amp2=0.; // soma das amplitudes da amostras ao quadrado
 		int M=0; // contador de amostras
 		float semb=0; // semblance
 		int im, ih; // índice da amostra no CMP e no meio afastamento
@@ -694,13 +714,13 @@ float pade_t2h(float t0, float m0, float h0, float x0, float v0, float R_N, floa
 		float k4=((v0*t0*R_NIP*R_NIP*(6-8*cos(BETA)*cos(BETA))+v0*t0*R_NIP*R_N*(4-5*cos(BETA)*cos(BETA))));
 		float CO,C1,C3;
 							
-		for (im=im0-50; im < im0+50; im++){
+		for (im=im0-mMAX; im < im0+mMAX; im++){
 			
 			m=im*dm+x0; //coordenada do CMP em relação a origem x0
 	
 			m=m-m0; // distância em relação ao CMP central m0
 			
-			for(ih=0;ih<51;ih++){
+			for(ih=0;ih<hMAX;ih++){
 			
 				h=ih*dh+h0; // coordenada do meio afastamento
 										
@@ -711,7 +731,14 @@ float pade_t2h(float t0, float m0, float h0, float x0, float v0, float R_N, floa
 									
 				teta=(h*h*C1)/(1+h*h*(C3));
 				teta=CO+teta;
-				teta=sqrt(teta); 
+				teta=sqrt(teta);
+
+				/* Restrição para não permitir tempo negativo */
+				if ( teta < 0.) teta=0.;
+
+				/*teta=CO+C1*h*h+(C3*h*h*h*h)/(1-C3*h*h/C1);
+				teta=sqrt(teta);*/ 
+				//t[im][ih]=teta;
 				
 				/* Incremente a quantidade de amostras */
 				M++;
@@ -752,10 +779,10 @@ float pade_t2h(float t0, float m0, float h0, float x0, float v0, float R_N, floa
 float pade_t2m(float t0, float m0, float h0, float x0, float v0, float R_N, float R_NIP, float BETA, int nh, float dh,  int nm,  float dm, float **t) {
 /*< Semblance da aproximação do CRS Padé hiperbólico expansão em m (NEVES, 2017)>*/
 	
-		float ampt; // amplitude da amostra
-		float amp2t; // amplitude da amostra ao quadrado
-		float amp; // soma das amplitudes das amostras
-		float amp2; // soma das amplitudes da amostras ao quadrado
+		float ampt=0.; // amplitude da amostra
+		float amp2t=0.; // amplitude da amostra ao quadrado
+		float amp=0.; // soma das amplitudes das amostras
+		float amp2=0.; // soma das amplitudes da amostras ao quadrado
 		int M=0; // contador de amostras
 		float semb=0; // semblance
 		int im, ih; // índice da amostra no CMP e no meio afastamento
@@ -774,13 +801,13 @@ float pade_t2m(float t0, float m0, float h0, float x0, float v0, float R_N, floa
 		float s8=(cos(BETA)*cos(BETA)*(R_N*(10*cos(BETA)*cos(BETA)-8)+v0*t0*(4-5*cos(BETA)*cos(BETA))))/(2*v0*v0*R_N*R_N*R_N);
 		float CO,C1,C2,C3,C4,q1,q2,po,p1,p2,pp,qq;
 					
-		for (im=im0-50; im < im0+50; im++){
+		for (im=im0-mMAX; im < im0+mMAX; im++){
 			
 			m=im*dm+x0; //coordenada do CMP em relação a origem x0
 	
 			m=m-m0; // distância em relação ao CMP central m0
 			
-			for(ih=0;ih<51;ih++){
+			for(ih=0;ih<hMAX;ih++){
 			
 				h=ih*dh+h0; // coordenada do meio afastamento
 										
@@ -803,6 +830,8 @@ float pade_t2m(float t0, float m0, float h0, float x0, float v0, float R_N, floa
 				teta=pp/qq;
 				teta=sqrt(teta);
 			
+				/* Restrição para não permitir tempo negativo */
+				if ( teta < 0.) teta=0.;
 				
 				/* Incremente a quantidade de amostras */
 				M++;
@@ -843,10 +872,10 @@ float pade_t2m(float t0, float m0, float h0, float x0, float v0, float R_N, floa
 float pade_tsh(float t0, float m0, float h0, float x0, float v0, float R_N, float R_NIP, float BETA, int nh, float dh,  int nm,  float dm, float **t){
 /*< Semblance da aproximação do CRS Padé deslocada expansão em h (NEVES, 2017) >*/
 
-		float ampt; // amplitude da amostra
-		float amp2t; // amplitude da amostra ao quadrado
-		float amp; // soma das amplitudes das amostras
-		float amp2; // soma das amplitudes da amostras ao quadrado
+		float ampt=0.; // amplitude da amostra
+		float amp2t=0.; // amplitude da amostra ao quadrado
+		float amp=0.; // soma das amplitudes das amostras
+		float amp2=0.; // soma das amplitudes da amostras ao quadrado
 		int M=0; // contador de amostras
 		float semb=0; // semblance
 		int im, ih; // índice da amostra no CMP e no meio afastamento
@@ -867,13 +896,13 @@ float pade_tsh(float t0, float m0, float h0, float x0, float v0, float R_N, floa
 		float s10=t0-(2*R_NIP/v0);
 		float CO,C1,C2;
 			
-		for (im=im0-50; im < im0+50; im++){
+		for (im=im0-mMAX; im < im0+mMAX; im++){
 			
 			m=im*dm+x0; //coordenada do CMP em relação a origem x0
 	
 			m=m-m0; // distância em relação ao CMP central m0
 			
-			for(ih=0;ih<51;ih++){
+			for(ih=0;ih<hMAX;ih++){
 			
 				h=ih*dh+h0; // coordenada do meio afastamento
 										
@@ -888,6 +917,8 @@ float pade_tsh(float t0, float m0, float h0, float x0, float v0, float R_N, floa
 				teta=sqrt(teta);
 				teta=teta+s10;
 			
+				/* Restrição para não permitir tempo negativo */
+				if ( teta < 0.) teta=0.;
 				
 				/* Incremente a quantidade de amostras */
 				M++;
@@ -928,10 +959,10 @@ float pade_tsh(float t0, float m0, float h0, float x0, float v0, float R_N, floa
 float pade_tsm(float t0, float m0, float h0, float x0, float v0, float R_N, float R_NIP, float BETA, int nh, float dh,  int nm,  float dm, float **t){
 /*< Semblance da aproximação do CRS Padé deslocada expansão em m (NEVES, 2017) >*/
 
-		float ampt; // amplitude da amostra
-		float amp2t; // amplitude da amostra ao quadrado
-		float amp; // soma das amplitudes das amostras
-		float amp2; // soma das amplitudes da amostras ao quadrado
+		float ampt=0.; // amplitude da amostra
+		float amp2t=0.; // amplitude da amostra ao quadrado
+		float amp=0.; // soma das amplitudes das amostras
+		float amp2=0.; // soma das amplitudes da amostras ao quadrado
 		int M=0; // contador de amostras
 		float semb=0; // semblance
 		int im, ih; // índice da amostra no CMP e no meio afastamento
@@ -953,13 +984,13 @@ float pade_tsm(float t0, float m0, float h0, float x0, float v0, float R_N, floa
 		float s11=t0-(2*R_NIP/v0);
 		float CO,C1,C2,C3,C4,q1,q2,po,p1,p2,pp,qq;
 					
-		for (im=im0-50; im < im0+50; im++){
+		for (im=im0-mMAX; im < im0+mMAX; im++){
 			
 			m=im*dm+x0; //coordenada do CMP em relação a origem x0
 	
 			m=m-m0; // distância em relação ao CMP central m0
 			
-			for(ih=0;ih<51;ih++){
+			for(ih=0;ih<hMAX;ih++){
 			
 				h=ih*dh+h0; // coordenada do meio afastamento
 										
@@ -984,6 +1015,8 @@ float pade_tsm(float t0, float m0, float h0, float x0, float v0, float R_N, floa
 				teta=sqrt(teta);
 				teta=teta+s11;
 			
+				/* Restrição para não permitir tempo negativo */
+				if ( teta < 0.) teta=0.;
 				
 				/* Incremente a quantidade de amostras */
 				M++;

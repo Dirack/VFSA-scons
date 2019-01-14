@@ -462,8 +462,12 @@ void pade_t2h(float t0, float m0, float h0, float x0, float v0, float RN, float 
 				C1=s6+s7*m+s8*m*m;
 				C3=k3/(k1+k2*m+k4*m*m);
 									
-				teta=(h*h*C1)/(1+h*h*(C3));
+				/*teta=(h*h*C1)/(1+h*h*(C3));
 				teta=CO+teta;
+				teta=sqrt(teta); 
+				t[im][ih]=teta;*/
+
+				teta=CO+C1*h*h+(C3*h*h*h*h)/(1-C3*h*h/C1);
 				teta=sqrt(teta); 
 				t[im][ih]=teta;
 				

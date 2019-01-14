@@ -221,34 +221,37 @@ v0=1.5 # Velocidade (Km/s)
 app=1 # Índice da aproximação CRS a ser utilizada (veja o cabeçalho deste arquivo)
 m0=5 # CMP central m0
 verb=1 # Modo ativo, Manter assim! (Informa ao usuário sobre a aproximação utilizada)
-err ="erro_relativo.rsf" # Superfície de erro relativo absoluto 
-par = 'parametros_CRS.rsf' # Parâmetros do CRS zero offset (RN, RNIP, BETA)
 
-for iter in range(10):
+for iter in range(2):
 
 	par = 'param-%i' % (iter)
 
 	otm = 'otm-%i' % (iter)
 
-	err = 'erro-%i' % (iter)
-	
-	# VFSA
-	Flow(['out',par],'pick',
-		'''
-		vfsa param=${TARGETS[1]} verb=%d app=%d m0=%g v0=%g
-		''' % (verb,app,m0,v0))
-	Plot('pick','grey color=j allpos=y title="CRS-Modelada" label2=Km scalebar=y')
+	erro = 'erro-%i' % (iter)
 
+	err = 'err-%i' % (iter)
+
+	out = 'out-%i'% (iter)
+
+	# VFSA
+	Flow([out,par],'pick',
+	'''
+	vfsa param=${TARGETS[1]} verb=%d app=%d m0=%g v0=%g
+	''' % (verb,app,m0,v0))
+	
+	Plot('pick','grey color=j allpos=y title="CRS-Modelada" label2=Km scalebar=y')
+	
 	# Gerar superfície aproximada e superfície de erro relativo absoluto
 	Flow(otm,['pick',par],
-		'''
-		crs param=${SOURCES[1]} verb=%d app=%d m0=%g v0=%g
-		''' % (verb,app,m0,v0))
+	'''
+	crs param=${SOURCES[1]} verb=%d app=%d m0=%g v0=%g
+	''' % (verb,app,m0,v0))
 	Plot(otm,'grey color=j allpos=y title="CRS-Otimizada" label2=Km scalebar=y')
 
 	## Superficie de erro relativo absoluto (Aproximada - Modelada)
-	Flow('erro',['otm','pick'],'add scale=1,-1 ${SOURCES[1]} | math output="abs(input)" ')
-	Plot('erro','grey color=j allpos=y title="Erro relativo absoluto" label2=Km scalebar=y')
-	Result(err,'erro otm pick','SideBySideAniso',vppen='txscale=1.5')
+	Flow(erro,[otm,'pick'],'add scale=1,-1 ${SOURCES[1]} | math output="abs(input)" ')
+	Plot(erro,'grey color=j allpos=y title="Erro relativo absoluto" label2=Km scalebar=y')
+	Result(err,[erro, otm, 'pick'],'SideBySideAniso',vppen='txscale=1.5')
 
 End()

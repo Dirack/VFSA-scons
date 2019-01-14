@@ -314,7 +314,7 @@ int main(int argc, char* argv[])
 		   break;
 		   
 		   case 7: //aproximação Padé parabólico (CRS Padé parabólico expansão em m)
-			app_s="Padé th";
+			app_s="Padé tm";
 			semb=pade_tm(t0, m0,  h0, x0, v0,  R_N,  R_NIP,  BETA,  nh,  dh,  nm,  dm, t);
 			sf_warning("Aproximação (%s) iteração=%i/25000 Semb=%f",app_s,q,semb);
 		   break;
