@@ -1,4 +1,6 @@
-/* Versão 1.0 - Inversão dos parâmetros do CRS zero offset (RN, RNIP, BETA) utilizando o VFSA 
+/* Versão 1.1 - Inversão dos parâmetros do CRS zero offset (RN, RNIP, BETA) utilizando o VFSA 
+
+- Modificação: C0 e temp0 são Fornecidos pelo usuário.
 
 A partir de uma superfície de tempo de trânsito de reflexão, extraída dos dados, se
 obtém os parâmetros que melhor ajustam uma aproximação de tempo de trânsito CRS 
@@ -83,8 +85,8 @@ int main(int argc, char* argv[])
 	int im0; // índice da amostra do CMP central m0
 	float t0; // tempo de trânsito do raio normal
 	float temp; // temperatura na iteração 'q' do VFSA
-	float temp0=10; // temperatura inicial do VFSA
-	float c0=0.5; // Parâmetro do VFSA
+	float temp0; // temperatura inicial do VFSA
+	float c0; // Parâmetro do VFSA
 	float y; // perturbação dos parâmetros (incremento)
 	int q; // contador de iteração
 	int p; // contador de parâmetro
@@ -184,6 +186,12 @@ int main(int argc, char* argv[])
 
 	if (!sf_getfloat("semb",&semb_in)) semb_in=0.;
 	/* Semblamce inicial */
+
+	if (!sf_getfloat("c0",&c0)) c0=0.;
+	/* Fator de amortecimento */
+
+	if (!sf_getfloat("temp0",&temp0)) temp0=0.;
+	/* Temperatura inicial */
     
 	/* Ler a superfície de tempo de trânsito modelada */
 	t=sf_floatalloc2(nh,nm);

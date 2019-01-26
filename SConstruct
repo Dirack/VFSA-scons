@@ -10,7 +10,7 @@
 #
 # Site: http://www.dirackslounge.online
 # 
-# Versão 1.0
+# Versão 1.1 - temp0 e c0 são fornecidos pelo usuário
 #
 # Programador: Rodolfo A. C. Neves 17/11/2018
 #
@@ -221,6 +221,9 @@ v0=1.5 # Velocidade (Km/s)
 app=1 # Índice da aproximação CRS a ser utilizada (veja o cabeçalho deste arquivo)
 m0=5 # CMP central m0
 verb=1 # Modo ativo, Manter assim! (Informa ao usuário sobre a aproximação utilizada)
+temp0=10 # Temperatura inicial VFSA
+c0=0.5 # Fator de amortecimento VFSA
+
 
 for iter in range(2):
 
@@ -237,8 +240,8 @@ for iter in range(2):
 	# VFSA
 	Flow([out,par],'pick',
 	'''
-	vfsa param=${TARGETS[1]} verb=%d app=%d m0=%g v0=%g
-	''' % (verb,app,m0,v0))
+	vfsa param=${TARGETS[1]} verb=%d app=%d m0=%g v0=%g temp0=%g c0=%g
+	''' % (verb,app,m0,v0,temp0,c0))
 	
 	Plot('pick','grey color=j allpos=y title="CRS-Modelada" label2=Km scalebar=y')
 	
