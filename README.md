@@ -1,4 +1,4 @@
-# VFSA-scons
+# VFSA-scons 
 ## Projeto da tese de doutorado em geofísica
 
 >O VFSA-scons é uma adaptação do algoritmo de otimização global Very Fast Simulated Aneeling (VFSA) para a inversão 
