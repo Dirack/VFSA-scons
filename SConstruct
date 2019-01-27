@@ -107,7 +107,7 @@ import math
 # Criar o refletor a partir de uma função gaussiana
 Flow('dome',None,
      '''
-     math d1=0.01 n1=2001 o1=-5 unit1=km label1=Distance
+     math d1=0.01 n1=2001 o1=-5 unit1=km label1=Afastamento
      output="4-3*exp(-(x1-5)^2/9)"
      ''')
 
@@ -130,14 +130,14 @@ for g in range(2):
 Flow('vel','dome',
      '''
      window min1=0 max1=10 |
-     spray axis=1 n=451 d=0.01 o=0 label=Depth unit=km |
+     spray axis=1 n=451 d=0.01 o=0 label=Profundidade unit=km |
      math output="1.5+0.5*x1+0.0*x2"
      ''')
 
 Plot('vel',
      '''
      grey color=j allpos=y bias=1.5 scalebar=y wanttitle=n
-     barreverse=y barlabel=Velocity barunit=km/s
+     barreverse=y barlabel=Velocidade barunit=km/s
      ''')
 
 Result('dome','vel dome0 dome1','Overlay')
@@ -170,10 +170,10 @@ Result('data',
        byte |
        transp plane=23 |
        grey3 flat=n frame1=500 frame3=80 frame2=200
-       label1=Time unit1=s 
-       label3=Half-Offset unit3=km 
-       label2=Midpoint unit2=km
-       title=Data point1=0.8 point2=0.8 
+       label1=Tempo unit1=s 
+       label3=Meio-afastamento unit3=km 
+       label2=PMC unit2=km
+       title='Dados Modelo refletor gaussiano' point1=0.8 point2=0.8 
        ''')
 
 Plot('data',
@@ -181,10 +181,10 @@ Plot('data',
        byte |
        transp plane=23 memsize=1000 |
        grey3 flat=y frame1=500 frame3=80 frame2=200
-       label1=Time unit1=s 
-       label3=Half-Offset unit3=km 
-       label2=Midpoint unit2=km
-       title=Data point1=0.8 point2=0.8 
+       label1=Tempo unit1=s 
+       label3=Meio-afastamento unit3=km 
+       label2=PMC unit2=km
+       title='Dados modelo refletor gaussiano' point1=0.8 point2=0.8 
        ''')
 
 #---------------------{ Picking }-----------------------
@@ -222,7 +222,7 @@ app=1 # Índice da aproximação CRS a ser utilizada (veja o cabeçalho deste ar
 m0=5 # CMP central m0
 verb=1 # Modo ativo, Manter assim! (Informa ao usuário sobre a aproximação utilizada)
 temp0=10 # Temperatura inicial VFSA
-c0=0.5 # Fator de amortecimento VFSA
+c0=0.8 # Fator de amortecimento VFSA
 
 
 for iter in range(2):

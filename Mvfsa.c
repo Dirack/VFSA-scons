@@ -187,10 +187,10 @@ int main(int argc, char* argv[])
 	if (!sf_getfloat("semb",&semb_in)) semb_in=0.;
 	/* Semblamce inicial */
 
-	if (!sf_getfloat("c0",&c0)) c0=0.;
+	if (!sf_getfloat("c0",&c0)) c0=0.5;
 	/* Fator de amortecimento */
 
-	if (!sf_getfloat("temp0",&temp0)) temp0=0.;
+	if (!sf_getfloat("temp0",&temp0)) temp0=10.;
 	/* Temperatura inicial */
     
 	/* Ler a superfície de tempo de trânsito modelada */
