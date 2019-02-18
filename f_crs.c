@@ -432,20 +432,16 @@ void pade_t2h(float t0, float m0, float h0, float x0, float v0, float RN, float 
 		float teta; //amostra no tempo	
 	
 		/* Parâmetros do CRS padé-t2 em h */
-		float s1=t0*t0;
-		float s2=((4*t0*sin(BETA))/v0);
-		float s3=(2*(v0*t0*cos(BETA)*cos(BETA)+2*RN*sin(BETA)*sin(BETA))/(v0*v0*RN));
-		float s4=((2*sin(BETA)*cos(BETA)*cos(BETA)*(2*RN-v0*t0))/(v0*v0*RN*RN));
-		float s5=(cos(BETA)*cos(BETA)*(RN*(10*cos(BETA)*cos(BETA)-8)+v0*t0*(4-5*cos(BETA)*cos(BETA))))/(2*v0*v0*RN*RN*RN);
-		float s6=((2*t0*cos(BETA)*cos(BETA))/(v0*RNIP));
-		float s7=(2*sin(BETA)*cos(BETA)*cos(BETA)*(2*RNIP*RN-2*v0*t0*RNIP-v0*t0*RN))/(v0*v0*RNIP*RNIP*RN);
-		float s8=(cos(BETA)*cos(BETA)/(v0*v0*RNIP*RNIP*RNIP*RN*RN))*(v0*t0*RNIP*RNIP*(6-8*cos(BETA)*cos(BETA))+v0*t0*RNIP*RN*(4-5*cos(BETA)*cos(BETA))+(2*v0*t0*RN*RN*sin(BETA)*sin(BETA)-4*RNIP*RN*RN*sin(BETA)*sin(BETA)+RNIP*RNIP*RN*(10*cos(BETA)*cos(BETA)-8)));
-		
-		float k3=-(((4*RN*v0*t0*RNIP*sin(BETA)*sin(BETA)-v0*t0*RN*RN*cos(BETA)*cos(BETA)+2*RNIP*RN*cos(BETA)*cos(BETA)))/2);
-		float k1=2*v0*t0*RNIP*RNIP*RN;
-		float k2=2*RN*RNIP*sin(BETA)*((2*RNIP*RN-2*v0*t0*RNIP-v0*t0*RN));
-		float k4=((v0*t0*RNIP*RNIP*(6-8*cos(BETA)*cos(BETA))+v0*t0*RNIP*RN*(4-5*cos(BETA)*cos(BETA))));
-		float CO,C1,C3;			
+		double s1=t0*t0;
+		double s2=((4*t0*sin(BETA))/v0);
+		double s3=(2*(v0*t0*cos(BETA)*cos(BETA)+2*RN*sin(BETA)*sin(BETA))/(v0*v0*RN));
+		double s4=((2*sin(BETA)*cos(BETA)*cos(BETA)*(2*RN-v0*t0))/(v0*v0*RN*RN));
+		double s5=(cos(BETA)*cos(BETA)*(RN*(10*cos(BETA)*cos(BETA)-8)+v0*t0*(4-5*cos(BETA)*cos(BETA))))/(2*v0*v0*RN*RN*RN);
+		double s6=((2*t0*cos(BETA)*cos(BETA))/(v0*RNIP));
+		double s7=(2*sin(BETA)*cos(BETA)*cos(BETA)*(2*RNIP*RN-2*v0*t0*RNIP-v0*t0*RN))/(v0*v0*RNIP*RNIP*RN);
+		double s8=(cos(BETA)*cos(BETA)/(v0*v0*RNIP*RNIP*RNIP*RN*RN))*(v0*t0*RNIP*RNIP*(6-8*cos(BETA)*cos(BETA))+v0*t0*RNIP*RN*(4-5*cos(BETA)*cos(BETA))+(2*v0*t0*RN*RN*sin(BETA)*sin(BETA)-4*RNIP*RN*RN*sin(BETA)*sin(BETA)+RNIP*RNIP*RN*(10*cos(BETA)*cos(BETA)-8)));
+		double s9=((cos(BETA)*cos(BETA))/(2*v0*v0*RNIP*RNIP*RNIP*RN))*(4*v0*t0*RNIP*sin(BETA)*sin(BETA)-v0*t0*RN*cos(BETA)*cos(BETA)+2*RNIP*RN*cos(BETA)*cos(BETA));
+		double CO,C1,C3;
 			
 		for (im=0; im < nm; im++){
 			
@@ -460,16 +456,16 @@ void pade_t2h(float t0, float m0, float h0, float x0, float v0, float RN, float 
 				/* APROXIMAÇÃO QUADRÁTICA SRC-PADÉ EXPANSÃO EM h */
 				CO=s1+s2*m+s3*m*m+s4*m*m*m+s5*m*m*m*m;
 				C1=s6+s7*m+s8*m*m;
-				C3=k3/(k1+k2*m+k4*m*m);
+				C3=-s9/C1;
 									
-				/*teta=(h*h*C1)/(1+h*h*(C3));
+				teta=(h*h*C1)/(1+h*h*(C3));
 				teta=CO+teta;
 				teta=sqrt(teta); 
-				t[im][ih]=teta;*/
-
-				teta=CO+C1*h*h+(C3*h*h*h*h)/(1-C3*h*h/C1);
-				teta=sqrt(teta); 
 				t[im][ih]=teta;
+
+				/*teta=CO+C1*h*h+(C3*h*h*h*h)/(1-C3*h*h/C1);
+				teta=sqrt(teta); 
+				t[im][ih]=teta;*/
 				
 			}
 		

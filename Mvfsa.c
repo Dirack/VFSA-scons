@@ -175,10 +175,10 @@ int main(int argc, char* argv[])
 	if (!sf_getfloat("v0",&v0)) v0=1.5;
 	/* Velocidade próxima a superfície (Km/s) */
               
-	if (!sf_getfloat("rn",&RN_in)) RN_in=0.;
+	if (!sf_getfloat("rn",&RN_in)) RN_in=1.;
 	/* raio de curvatura N inicial */
 
-	if (!sf_getfloat("rnip",&RNIP_in)) RNIP_in=0.;
+	if (!sf_getfloat("rnip",&RNIP_in)) RNIP_in=1.;
 	/* raio de curvatura NIP inicial */
 
 	if (!sf_getfloat("beta",&BETA_in)) BETA_in=0.;
@@ -211,9 +211,9 @@ int main(int argc, char* argv[])
 	
 	/* Definindo o intervalo de busca dos Parâmetros */
 	mmin[0]=0.5;
-	mmax[0]=3;
+	mmax[0]=5;
 	mmin[1]=0.5;
-	mmax[1]=3;
+	mmax[1]=5;
 	mmin[2]=-3.14159;
 	mmax[2]=3.14159;
 	

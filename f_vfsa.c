@@ -48,7 +48,7 @@ void f_vfsa_aviso(int app){
 		   break;
 		   
 		   case 6: //aproximação Padé parabólico (CRS Padé parabólico expansão em h)
-			 sf_warning("Aproximação Padé parabólico (CRS Padé parabólico expansão em m)");
+			 sf_warning("Aproximação Padé parabólico (CRS Padé parabólico expansão em h)");
 		   break;
 		   
 		   case 7: //aproximação Padé parabólico (CRS Padé parabólico expansão em m)
@@ -134,6 +134,13 @@ float fomel(float t0, float m0, float h0, float x0, float v0, float R_N, float R
 				teta=sqrt(teta/2);
 
 				/* Restrição para não permitir tempo negativo */
+				if ( teta < 0.){
+					sf_warning("m=%g; h=%g; t0=%g",m,h,t0);
+					sf_warning("rn=%g; rnip=%g; beta=%g",R_N,R_NIP,BETA);
+					 sf_error("a1=%g;a2=%g;b2=%g;c1=%g\n;teta=%g;",a1,a2,b2,c1,teta);
+				}
+
+				/* Restrição para não permitir tempo negativo */
 				if ( teta < 0.) teta=0.;
 				
 				/* incremento a quantidade de amostras */
@@ -213,7 +220,11 @@ float jager(float t0, float m0, float h0, float x0, float v0, float R_N, float R
 				teta=sqrt(teta);
 
 				/* Restrição para não permitir tempo negativo */
-				if ( teta < 0.) teta=0.;
+				if ( teta < 0.){
+					sf_warning("m=%g; h=%g; t0=%g",m,h,t0);
+					sf_warning("rn=%g; rnip=%g; beta=%g",R_N,R_NIP,BETA);
+					 sf_error("a1=%g;a2=%g;b2=%g\n;teta=%g;",a1,a2,b2,teta);
+				}
 				
 				/* Quantidade de amostras */
 				M++;
@@ -296,8 +307,12 @@ float germam_t(float t0, float m0, float h0, float x0, float v0, float R_N, floa
 				g5=h*h*h*h*s8;
 				teta=g1+g2+g3+g4+g5;
 
-				/* Restrição para não permitir tempo negativo */
-				if ( teta < 0.) teta=0.;
+				/* Restrição para não permitir tempo negativo 
+				if ( teta < 0.){
+					sf_warning("m=%g; h=%g; t0=%g",m,h,t0);
+					sf_warning("rn=%g; rnip=%g; beta=%g",R_N,R_NIP,BETA);
+					 sf_error("g1=%g;g2=%g;g3=%g\n;g4=%g;g5=%g;teta=%g;",g1,g2,g3,g4,g5,teta);
+				}*/
 				
 				/* Incremente a Quantidade de amostras */
 				M++;
@@ -553,7 +568,7 @@ float pade_th(float t0, float m0, float h0, float x0, float v0, float R_N, float
 				teta=CO + teta;
 
 				/* Restrição para não permitir tempo negativo */
-				if ( teta < 0.) teta=0.;
+				//if ( teta < 0. && teta > 10.) teta=0.;
 				
 				/* Incremente a quantidade de amostras */
 				M++;
@@ -646,7 +661,7 @@ float pade_tm(float t0, float m0, float h0, float x0, float v0, float R_N, float
 				teta=pp/qq;
 
 				/* Restrição para não permitir tempo negativo */
-				if ( teta < 0.) teta=0.;
+				//if ( teta < 0.) teta=0.;
 			
 				/* Incremente a quantidade de amostras */
 				M++;
@@ -699,20 +714,21 @@ float pade_t2h(float t0, float m0, float h0, float x0, float v0, float R_N, floa
 		float teta; //amostra no tempo	
 	
 		/* Parâmetros do CRS padé-t2 em h */
-		float s1=t0*t0;
-		float s2=((4*t0*sin(BETA))/v0);
-		float s3=(2*(v0*t0*cos(BETA)*cos(BETA)+2*R_N*sin(BETA)*sin(BETA))/(v0*v0*R_N));
-		float s4=((2*sin(BETA)*cos(BETA)*cos(BETA)*(2*R_N-v0*t0))/(v0*v0*R_N*R_N));
-		float s5=(cos(BETA)*cos(BETA)*(R_N*(10*cos(BETA)*cos(BETA)-8)+v0*t0*(4-5*cos(BETA)*cos(BETA))))/(2*v0*v0*R_N*R_N*R_N);
-		float s6=((2*t0*cos(BETA)*cos(BETA))/(v0*R_NIP));
-		float s7=(2*sin(BETA)*cos(BETA)*cos(BETA)*(2*R_NIP*R_N-2*v0*t0*R_NIP-v0*t0*R_N))/(v0*v0*R_NIP*R_NIP*R_N);
-		float s8=(cos(BETA)*cos(BETA)/(v0*v0*R_NIP*R_NIP*R_NIP*R_N*R_N))*(v0*t0*R_NIP*R_NIP*(6-8*cos(BETA)*cos(BETA))+v0*t0*R_NIP*R_N*(4-5*cos(BETA)*cos(BETA))+(2*v0*t0*R_N*R_N*sin(BETA)*sin(BETA)-4*R_NIP*R_N*R_N*sin(BETA)*sin(BETA)+R_NIP*R_NIP*R_N*(10*cos(BETA)*cos(BETA)-8)));
+		double s1=t0*t0;
+		double s2=((4*t0*sin(BETA))/v0);
+		double s3=(2*(v0*t0*cos(BETA)*cos(BETA)+2*R_N*sin(BETA)*sin(BETA))/(v0*v0*R_N));
+		double s4=((2*sin(BETA)*cos(BETA)*cos(BETA)*(2*R_N-v0*t0))/(v0*v0*R_N*R_N));
+		double s5=(cos(BETA)*cos(BETA)*(R_N*(10*cos(BETA)*cos(BETA)-8)+v0*t0*(4-5*cos(BETA)*cos(BETA))))/(2*v0*v0*R_N*R_N*R_N);
+		double s6=((2*t0*cos(BETA)*cos(BETA))/(v0*R_NIP));
+		double s7=(2*sin(BETA)*cos(BETA)*cos(BETA)*(2*R_NIP*R_N-2*v0*t0*R_NIP-v0*t0*R_N))/(v0*v0*R_NIP*R_NIP*R_N);
+		double s8=(cos(BETA)*cos(BETA)/(v0*v0*R_NIP*R_NIP*R_NIP*R_N*R_N))*(v0*t0*R_NIP*R_NIP*(6-8*cos(BETA)*cos(BETA))+v0*t0*R_NIP*R_N*(4-5*cos(BETA)*cos(BETA))+(2*v0*t0*R_N*R_N*sin(BETA)*sin(BETA)-4*R_NIP*R_N*R_N*sin(BETA)*sin(BETA)+R_NIP*R_NIP*R_N*(10*cos(BETA)*cos(BETA)-8)));
+		double s9=((cos(BETA)*cos(BETA))/(2*v0*v0*R_NIP*R_NIP*R_NIP*R_N))*(4*v0*t0*R_NIP*sin(BETA)*sin(BETA)-v0*t0*R_N*cos(BETA)*cos(BETA)+2*R_NIP*R_N*cos(BETA)*cos(BETA));
 		
-		float k3=-(((4*R_N*v0*t0*R_NIP*sin(BETA)*sin(BETA)-v0*t0*R_N*R_N*cos(BETA)*cos(BETA)+2*R_NIP*R_N*cos(BETA)*cos(BETA)))/2);
-		float k1=2*v0*t0*R_NIP*R_NIP*R_N;
-		float k2=2*R_N*R_NIP*sin(BETA)*((2*R_NIP*R_N-2*v0*t0*R_NIP-v0*t0*R_N));
-		float k4=((v0*t0*R_NIP*R_NIP*(6-8*cos(BETA)*cos(BETA))+v0*t0*R_NIP*R_N*(4-5*cos(BETA)*cos(BETA))));
-		float CO,C1,C3;
+		double k3=-(((4*R_N*v0*t0*R_NIP*sin(BETA)*sin(BETA)-v0*t0*R_N*R_N*cos(BETA)*cos(BETA)+2*R_NIP*R_N*cos(BETA)*cos(BETA)))/2);
+		double k1=2*v0*t0*R_NIP*R_NIP*R_N;
+		double k2=2*R_N*R_NIP*sin(BETA)*((2*R_NIP*R_N-2*v0*t0*R_NIP-v0*t0*R_N));
+		double k4=((v0*t0*R_NIP*R_NIP*(6-8*cos(BETA)*cos(BETA))+v0*t0*R_NIP*R_N*(4-5*cos(BETA)*cos(BETA))));
+		double CO,C1,C3;
 							
 		for (im=im0-mMAX; im < im0+mMAX; im++){
 			
@@ -727,14 +743,27 @@ float pade_t2h(float t0, float m0, float h0, float x0, float v0, float R_N, floa
 				/* APROXIMAÇÃO QUADRÁTICA SRC-PADÉ EXPANSÃO EM h */
 				CO=s1+s2*m+s3*m*m+s4*m*m*m+s5*m*m*m*m;
 				C1=s6+s7*m+s8*m*m;
-				C3=k3/(k1+k2*m+k4*m*m);
+				C3=-s9/C1;//k3/(k1+k2*m+k4*m*m);
 									
 				teta=(h*h*C1)/(1+h*h*(C3));
+
+				//sf_warning("\ndh=%f;\ndm=%f;\nh=%f;m=%f;\nteta=%f\n",dh,dm,h,m,teta);
 				teta=CO+teta;
-				teta=sqrt(teta);
+				//sf_warning("\nh=%f;m=%f;teta=%f\n",h,m,teta);
 
 				/* Restrição para não permitir tempo negativo */
-				if ( teta < 0.) teta=0.;
+				//if ( teta < 0.){
+				
+					/*sf_warning("\ndh=%f;\ndm=%f;\nh=%f;m=%f",dh,dm,h,m);
+					sf_warning("\ns1=%f;\ns2=%f;\ns3=%f;\ns4=%f;\n",s1,s2,s3,s4);
+					sf_warning("\ns5=%f;\ns6=%f;\ns7=%f;\ns8=%f;\n",s5,s6,s7,s8);*/
+					//sf_warning("\nCO=%f;\nC1=%f;\nC3=%f;\n",CO,C1,C3);
+					//sf_error("\nk1=%f;\nk2=%f\nk3=%f\nk4=%f\n",k1,k2,k3,k4);
+					//sf_warning("\nh=%f;m=%f;teta=%f\n",h,m,teta);
+				//}
+
+				teta=sqrt(teta);
+				//sf_error("\ndh=%f;\ndm=%f;\nh=%f;m=%f;\nteta=%f\n",dh,dm,h,m,teta);
 
 				/*teta=CO+C1*h*h+(C3*h*h*h*h)/(1-C3*h*h/C1);
 				teta=sqrt(teta);*/ 
@@ -831,7 +860,7 @@ float pade_t2m(float t0, float m0, float h0, float x0, float v0, float R_N, floa
 				teta=sqrt(teta);
 			
 				/* Restrição para não permitir tempo negativo */
-				if ( teta < 0.) teta=0.;
+				//if ( teta < 0.) teta=0.;
 				
 				/* Incremente a quantidade de amostras */
 				M++;
@@ -918,7 +947,7 @@ float pade_tsh(float t0, float m0, float h0, float x0, float v0, float R_N, floa
 				teta=teta+s10;
 			
 				/* Restrição para não permitir tempo negativo */
-				if ( teta < 0.) teta=0.;
+				//if ( teta < 0.) teta=0.;
 				
 				/* Incremente a quantidade de amostras */
 				M++;
@@ -1016,7 +1045,7 @@ float pade_tsm(float t0, float m0, float h0, float x0, float v0, float R_N, floa
 				teta=teta+s11;
 			
 				/* Restrição para não permitir tempo negativo */
-				if ( teta < 0.) teta=0.;
+				//if ( teta < 0.) teta=0.;
 				
 				/* Incremente a quantidade de amostras */
 				M++;
