@@ -208,7 +208,7 @@ def gplot2(title,col,x0):
     ''' % (x0-dx,x0+dx,fx,title,4-col)
 
 # TODO Explicar aqui a metodologia de picking!!!!
-Flow('pick','data','envelope | max1 | window n1=1 | real')
+Flow('pick','data','envelope | max1 | window n1=1 | real | put label="Tempo" unit="s" ')
 
 #---------------------------------{ VFSA }----------------------------------------
 # 	Inversão dos parâmetros do CRS zero ofsset utilizando o algoritmo
@@ -243,18 +243,18 @@ for iter in range(2):
 	vfsa param=${TARGETS[1]} verb=%d app=%d m0=%g v0=%g temp0=%g c0=%g
 	''' % (verb,app,m0,v0,temp0,c0))
 	
-	Plot('pick','grey color=j allpos=y title="CRS-Modelada" label2=Km scalebar=y')
+	Plot('pick','grey color=j allpos=y title="SRC-Modelada" label3="Km" unit3="s" label2="PMC" unit2="Km" label1="Afastamento" unit1="Km" scalebar=y')
 	
 	# Gerar superfície aproximada e superfície de erro relativo absoluto
 	Flow(otm,['pick',par],
 	'''
 	crs param=${SOURCES[1]} verb=%d app=%d m0=%g v0=%g
 	''' % (verb,app,m0,v0))
-	Plot(otm,'grey color=j allpos=y title="CRS-Otimizada" label2=Km scalebar=y')
+	Plot(otm,'grey color=j allpos=y title="SRC-Otimizada" label3="Km" unit3="s" label2="PMC" unit2="Km" label1="Afastamento" unit1="Km" scalebar=y')
 
 	## Superficie de erro relativo absoluto (Aproximada - Modelada)
 	Flow(erro,[otm,'pick'],'add scale=1,-1 ${SOURCES[1]} | math output="abs(input)" ')
-	Plot(erro,'grey color=j allpos=y title="Erro relativo absoluto" label2=Km scalebar=y')
+	Plot(erro,'grey color=j allpos=y title="Erro Relativo Absoluto" label3="Km" unit3="s" label2="PMC" unit2="Km" label1="Afastamento" unit1="Km" scalebar=y')
 	Result(err,[erro, otm, 'pick'],'SideBySideAniso',vppen='txscale=1.5')
 
 End()
