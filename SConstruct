@@ -218,7 +218,7 @@ Flow('pick','data','envelope | max1 | window n1=1 | real | put label="Tempo" uni
 #----------------------------------------------------------------------------------
 
 v0=1.5 # Velocidade (Km/s)
-app=1 # Índice da aproximação CRS a ser utilizada (veja o cabeçalho deste arquivo)
+app=5 # Índice da aproximação CRS a ser utilizada (veja o cabeçalho deste arquivo)
 m0=5 # CMP central m0
 verb=1 # Modo ativo, Manter assim! (Informa ao usuário sobre a aproximação utilizada)
 temp0=10 # Temperatura inicial VFSA
@@ -243,18 +243,18 @@ for iter in range(2):
 	vfsa param=${TARGETS[1]} verb=%d app=%d m0=%g v0=%g temp0=%g c0=%g
 	''' % (verb,app,m0,v0,temp0,c0))
 	
-	Plot('pick','grey color=j allpos=y title="SRC-Modelada" label3="Km" unit3="s" label2="PMC" unit2="Km" label1="Afastamento" unit1="Km" scalebar=y')
+	Plot(['pick','bar'],'pick','grey color=j allpos=y title="SRC-Modelada" label3="Km" unit3="s" label2="PMC" unit2="Km" label1="Afastamento" unit1="Km" scalebar=y verb=y clip=3.65 bias=0 minval=0 maxval=3.65')
 	
 	# Gerar superfície aproximada e superfície de erro relativo absoluto
 	Flow(otm,['pick',par],
 	'''
 	crs param=${SOURCES[1]} verb=%d app=%d m0=%g v0=%g
 	''' % (verb,app,m0,v0))
-	Plot(otm,'grey color=j allpos=y title="SRC-Otimizada" label3="Km" unit3="s" label2="PMC" unit2="Km" label1="Afastamento" unit1="Km" scalebar=y')
+	Plot(otm,'grey color=j allpos=y clip=3.65 title="SRC-Otimizada" label3="Km" unit3="s" label2="PMC" unit2="Km" label1="Afastamento" unit1="Km" scalebar=y verb=y bias=0 minval=0 maxval=3.65')
 
 	## Superficie de erro relativo absoluto (Aproximada - Modelada)
 	Flow(erro,[otm,'pick'],'add scale=1,-1 ${SOURCES[1]} | math output="abs(input)" ')
-	Plot(erro,'grey color=j allpos=y title="Erro Relativo Absoluto" label3="Km" unit3="s" label2="PMC" unit2="Km" label1="Afastamento" unit1="Km" scalebar=y')
+	Plot(erro,'grey color=j allpos=y title="Erro Relativo Absoluto" label3="Km" unit3="s" label2="PMC" unit2="Km" label1="Afastamento" unit1="Km" scalebar=y verb=y clip=1 bias=0 minval=0 maxval=1')
 	Result(err,[erro, otm, 'pick'],'SideBySideAniso',vppen='txscale=1.5')
 
 End()
