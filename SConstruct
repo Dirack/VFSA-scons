@@ -1,18 +1,17 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 #
-# Madagascar-VFSA  (Script do Madagascar)
+# Madagascar-VFSA-CRE  (Script do Madagascar)
 #
-# Objetivo: Realizar a inversão dos parâmetros do CRS zero offset (RN, RNIP e BETA) a 
-# partir do algoritmo Very Fast Simulated Aneeling (VFSA). A inversão utiliza como 
-# critério de convergência o semblance entre a superfície modelada, extraída dos dados,
-# e a superfície aproximada (escolhida uma aproximação de tempo de trânsito CRS). 
+# Objetivo: Montar a superfície de tempo de trânsito CRE dada uma superfície
+# de tempo de trânsito aproximada e os parâmetros do CRS zero offset (RN, RNIP e BETA)
+# obtidas através de sfvfsa. 
 #
 # Site: http://www.dirackslounge.online
 # 
-# Versão 1.1 - temp0 e c0 são fornecidos pelo usuário
+# Versão 1.0
 #
-# Programador: Rodolfo A. C. Neves 17/11/2018
+# Programador: Rodolfo A. C. Neves (Dirack) 11/03/2019
 #
 # email: rodolfo_profissional@hotmail.com
 #
@@ -54,6 +53,10 @@
 #				-Padé-t2-m [ app=9 ]
 #				-Padé-tshift-h [ app=10 ]
 #				-Padé-tshift-m [ app=11 ]
+#
+# Referências sobre o método CRE:
+#
+#	-CRUZ, J. et al. The common reflecting element (cre) method revisited. Geophysics, v. 65, p. 979–993, 2000.
 # 
 # Referências sobre as aproximações de tempo de trânsito CRS utilizadas:
 #
@@ -218,7 +221,7 @@ Flow('pick','data','envelope | max1 | window n1=1 | real | put label="Tempo" uni
 #----------------------------------------------------------------------------------
 
 v0=1.5 # Velocidade (Km/s)
-app=5 # Índice da aproximação CRS a ser utilizada (veja o cabeçalho deste arquivo)
+app=1 # Índice da aproximação CRS a ser utilizada (veja o cabeçalho deste arquivo)
 m0=5 # CMP central m0
 verb=1 # Modo ativo, Manter assim! (Informa ao usuário sobre a aproximação utilizada)
 temp0=10 # Temperatura inicial VFSA
@@ -248,9 +251,9 @@ for iter in range(2):
 	# Gerar superfície aproximada e superfície de erro relativo absoluto
 	Flow(otm,['pick',par],
 	'''
-	crs param=${SOURCES[1]} verb=%d app=%d m0=%g v0=%g
+	cre param=${SOURCES[1]} verb=%d app=%d m0=%g v0=%g
 	''' % (verb,app,m0,v0))
-	Plot(otm,'grey color=j allpos=y clip=3.65 title="SRC-Otimizada" label3="Km" unit3="s" label2="PMC" unit2="Km" label1="Afastamento" unit1="Km" scalebar=y verb=y bias=0 minval=0 maxval=3.65')
+	Plot(otm,'grey color=j allpos=y clip=3.65 title="ERC-Otimizada" label3="Km" unit3="s" label2="PMC" unit2="Km" label1="Afastamento" unit1="Km" scalebar=y verb=y bias=0 minval=0 maxval=3.65')
 
 	## Superficie de erro relativo absoluto (Aproximada - Modelada)
 	Flow(erro,[otm,'pick'],'add scale=1,-1 ${SOURCES[1]} | math output="abs(input)" ')
