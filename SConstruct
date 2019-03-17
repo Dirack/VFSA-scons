@@ -222,7 +222,7 @@ Flow('pick','data','envelope | max1 | window n1=1 | real | put label="Tempo" uni
 
 v0=1.5 # Velocidade (Km/s)
 app=1 # Índice da aproximação CRS a ser utilizada (veja o cabeçalho deste arquivo)
-m0=5 # CMP central m0
+m0=7 # CMP central m0
 verb=1 # Modo ativo, Manter assim! (Informa ao usuário sobre a aproximação utilizada)
 temp0=10 # Temperatura inicial VFSA
 c0=0.8 # Fator de amortecimento VFSA
@@ -239,6 +239,10 @@ for iter in range(2):
 	err = 'err-%i' % (iter)
 
 	out = 'out-%i'% (iter)
+	
+	cre = 'cre-%i'% (iter)
+
+	creOver = 'cre-over-%i'% (iter)
 
 	# VFSA
 	Flow([out,par],'pick',
@@ -258,6 +262,20 @@ for iter in range(2):
 	## Superficie de erro relativo absoluto (Aproximada - Modelada)
 	Flow(erro,[otm,'pick'],'add scale=1,-1 ${SOURCES[1]} | math output="abs(input)" ')
 	Plot(erro,'grey color=j allpos=y title="Erro Relativo Absoluto" label3="Km" unit3="s" label2="PMC" unit2="Km" label1="Afastamento" unit1="Km" scalebar=y verb=y clip=1 bias=0 minval=0 maxval=1')
-	Result(err,[erro, otm, 'pick'],'SideBySideAniso',vppen='txscale=1.5')
+
+	## Curva CRE plotada sobre a superfície de erro relativo absoluto
+	Flow(cre,[otm,par],
+	'''
+	plotcre m0=%g verb=%d param=${SOURCES[1]}
+	'''%(m0,verb))
+
+	Plot(cre,
+	'''
+	graph transp=y min1=0 max1=2 min2=0 max2=10 yreverse=y wantaxis=n wanttitle=n scalebar=y
+	''')
+
+	Plot(creOver,[erro,cre],'Overlay')
+
+	Result(err,[creOver, otm, 'pick'],'SideBySideAniso',vppen='txscale=1.5')
 
 End()
