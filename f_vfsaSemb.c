@@ -22,6 +22,35 @@ Acesse conteúdo exclusivo e tire dúvidas no nosso site:
 
 /********************[Funções]**********************************/
 
+float encontrarT0(float ***t, int im0, float dt, float nt){
+/*< Dado o índice de m0, encontrar o tempo t0 (será um pico de amplitude no vetor t[im0][0][ti]) >*/
+
+	float amp=0;
+	int it;
+	float maior=0;
+	float t0=0;
+
+	/* Procure por um pico de amplitude, ele marca a primeira chegada */
+	for(it=0; it<nt;it++){
+
+		amp=t[im0][0][it];
+
+		//if(amp>0.000)sf_warning("amp(%f)=%f",it*dt,amp);
+		
+		if(amp>maior){
+			maior=amp;
+			t0=(it-5)*dt;
+
+			sf_warning("amp(%f)=%f",it*dt,amp);
+			
+		}
+
+	}
+
+	return t0;
+
+}
+
 void f_vfsa_aviso(int app){
 /*< Informar usuário sobre a aproximação de tempo de trânsito CRS escolhida >*/
 		
@@ -92,7 +121,7 @@ float sinal(float s) {
 }
 
 
-float fomel(float t0, float m0, float h0, float x0, float v0, float R_N, float R_NIP, float BETA, int nh, float dh, int nm, float dm, float **t){ 
+float fomel(float dt, float t0, float m0, float h0, float x0, float v0, float R_N, float R_NIP, float BETA, int nh, float dh, int nm, float dm, float ***t){ 
 /*< Semblance da aproximação de tempo de trânsito do CRS não hiperbólico (FOMEL; KAZINNIK, 2013) >*/
 
 		float ampt=0.; // amplitude da amostra
@@ -105,6 +134,7 @@ float fomel(float t0, float m0, float h0, float x0, float v0, float R_N, float R
 		int im0=(m0/dm); // índice da amostra do CMP central m0
 		float m, h; // coordenada do CMP e do meio afastamento
 		float teta; //amostra no tempo
+		int tetai;
 
 		/* Parâmetros da aproximação de Fomel */
 		float a1=(2*sin(BETA))/(v0);		
@@ -133,15 +163,19 @@ float fomel(float t0, float m0, float h0, float x0, float v0, float R_N, float R
 				teta=(Fd+c1*h*h+teta);
 				teta=sqrt(teta/2);
 
-				/* Restrição para não permitir tempo negativo */
+				tetai=teta/dt; //índice da amostra
+
+				//sf_warning("indice=%i",tetai);
+
+				/* Restrição para não permitir tempo negativo 
 				if ( teta < 0.){
 					sf_warning("m=%g; h=%g; t0=%g",m,h,t0);
 					sf_warning("rn=%g; rnip=%g; beta=%g",R_N,R_NIP,BETA);
 					 sf_error("a1=%g;a2=%g;b2=%g;c1=%g\n;teta=%g;",a1,a2,b2,c1,teta);
-				}
+				}*/
 
 				/* Restrição para não permitir tempo negativo */
-				if ( teta < 0.) teta=0.;
+				//if ( teta < 0.) teta=0.;
 				
 				/* incremento a quantidade de amostras */
 				M++;
@@ -149,15 +183,17 @@ float fomel(float t0, float m0, float h0, float x0, float v0, float R_N, float R
 				/* se o tempo de trânsito da aproximação teta(h,m) está próximo do tempo
 				   de trânsito modelado t(h,m) considerar essa amostra no cálculo do 
 				   semblance */
-				if (fabs(t[im][ih] - teta) <= 0.2) {	
+				//if (fabs(t[im][ih] - teta) <= 0.2) {	
 					
 					/* as amplitudes ampt são dadas simulando a fonte por um
 					   pulso ricker
 					   distância da amostra em relação ao centro do pulso */
-					teta=teta-t[im][ih];
+					//teta=teta-t[im][ih];
 					
 					/* amplitude da amostra */
-					ampt=(1-teta*teta*0.5)*exp(-8000*(teta*teta)*0.25);
+					ampt=t[im][ih][tetai];//(1-teta*teta*0.5)*exp(-8000*(teta*teta)*0.25);
+
+					//sf_warning("amp=%f",ampt);
 					
 					/* some as amplitude na variável amp */
 					amp=amp+ampt;
@@ -165,11 +201,13 @@ float fomel(float t0, float m0, float h0, float x0, float v0, float R_N, float R
 					/* elevar ao quadrado e armazenar em amp2 */
 					amp2t=ampt*ampt;
 					amp2=amp2+amp2t; 
-				}
+				//}
 				
 			}
 		
 	}		
+
+		//sf_error("fim!");
 
 		/* restrição: garantir que não haja divisão por zero */
 		if(amp2==0 || amp==0)		

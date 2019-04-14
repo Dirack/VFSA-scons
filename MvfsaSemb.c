@@ -208,19 +208,17 @@ int main(int argc, char* argv[])
 	/* Ler o cubo de dados */
 	t=sf_floatalloc3(nt,nh,nm);
 
-
-
 	sf_floatread(t[0][0],nh*nm*nt,in);
 
 	/* Indice da amostra do CMP central m0*/
 	im0=(m0/dm);	
 
 	/* t0 tempo de trânsito do raio normal */
-	t0=im0*dt;
+	t0=encontrarT0(t, im0, dt, nt);//im0*dt;
 
-	sf_warning("im0=%i;t0=%f",im0, t0);
+	//sf_warning("im0=%i;t0=%f",im0, t0);
 
-	sf_error("Terminado!");
+	//sf_error("t0=%f",t0);
 	
 	/* Inicializando parâmetros a inverter */
 	c[0]=RN_in;  // RN inicial
@@ -305,7 +303,7 @@ int main(int argc, char* argv[])
 		{
 		   case 1: //aproximação fomel (CRS NÃO hiperbólico)
 			app_s="Fomel";
-			semb=fomel(t0, m0,  h0, x0, v0,  R_N,  R_NIP,  BETA,  nh,  dh,  nm,  dm, t);
+			semb=fomel(dt,t0, m0,  h0, x0, v0,  R_N,  R_NIP,  BETA,  nh,  dh,  nm,  dm, t);
 			sf_warning("Aproximação (%s) iteração=%i/25000 Semb=%f",app_s,q,semb);
 		   break;
 

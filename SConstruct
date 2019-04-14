@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 #
-# Madagascar-VFSA  (Script do Madagascar)
+# Madagascar-VFSA-SEMB  (Script do Madagascar)
 #
 # Objetivo: Realizar a inversão dos parâmetros do CRS zero offset (RN, RNIP e BETA) a 
 # partir do algoritmo Very Fast Simulated Aneeling (VFSA). A inversão utiliza como 
@@ -10,7 +10,7 @@
 #
 # Site: http://www.dirackslounge.online
 # 
-# Versão 1.0
+# Versão 1.1 - temp0 e c0 são fornecidos pelo usuário
 #
 # Programador: Rodolfo A. C. Neves 17/11/2018
 #
@@ -107,7 +107,7 @@ import math
 # Criar o refletor a partir de uma função gaussiana
 Flow('dome',None,
      '''
-     math d1=0.01 n1=2001 o1=-5 unit1=km label1=Distance
+     math d1=0.01 n1=2001 o1=-5 unit1=km label1=Afastamento
      output="4-3*exp(-(x1-5)^2/9)"
      ''')
 
@@ -130,14 +130,14 @@ for g in range(2):
 Flow('vel','dome',
      '''
      window min1=0 max1=10 |
-     spray axis=1 n=451 d=0.01 o=0 label=Depth unit=km |
+     spray axis=1 n=451 d=0.01 o=0 label=Profundidade unit=km |
      math output="1.5+0.5*x1+0.0*x2"
      ''')
 
 Plot('vel',
      '''
      grey color=j allpos=y bias=1.5 scalebar=y wanttitle=n
-     barreverse=y barlabel=Velocity barunit=km/s
+     barreverse=y barlabel=Velocidade barunit=km/s
      ''')
 
 Result('dome','vel dome0 dome1','Overlay')
@@ -170,10 +170,10 @@ Result('data',
        byte |
        transp plane=23 |
        grey3 flat=n frame1=500 frame3=80 frame2=200
-       label1=Time unit1=s 
-       label3=Half-Offset unit3=km 
-       label2=Midpoint unit2=km
-       title=Data point1=0.8 point2=0.8 
+       label1=Tempo unit1=s 
+       label3=Meio-afastamento unit3=km 
+       label2=PMC unit2=km
+       title='Dados Modelo refletor gaussiano' point1=0.8 point2=0.8 
        ''')
 
 Plot('data',
@@ -181,10 +181,10 @@ Plot('data',
        byte |
        transp plane=23 memsize=1000 |
        grey3 flat=y frame1=500 frame3=80 frame2=200
-       label1=Time unit1=s 
-       label3=Half-Offset unit3=km 
-       label2=Midpoint unit2=km
-       title=Data point1=0.8 point2=0.8 
+       label1=Tempo unit1=s 
+       label3=Meio-afastamento unit3=km 
+       label2=PMC unit2=km
+       title='Dados modelo refletor gaussiano' point1=0.8 point2=0.8 
        ''')
 
 #---------------------{ Picking }-----------------------
@@ -208,7 +208,7 @@ def gplot2(title,col,x0):
     ''' % (x0-dx,x0+dx,fx,title,4-col)
 
 # TODO Explicar aqui a metodologia de picking!!!!
-Flow('pick','data','envelope | max1 | window n1=1 | real')
+Flow('pick','data','envelope | max1 | window n1=1 | real | put label="Tempo" unit="s" ')
 
 #---------------------------------{ VFSA }----------------------------------------
 # 	Inversão dos parâmetros do CRS zero ofsset utilizando o algoritmo
@@ -221,6 +221,9 @@ v0=1.5 # Velocidade (Km/s)
 app=1 # Índice da aproximação CRS a ser utilizada (veja o cabeçalho deste arquivo)
 m0=5 # CMP central m0
 verb=1 # Modo ativo, Manter assim! (Informa ao usuário sobre a aproximação utilizada)
+temp0=10 # Temperatura inicial VFSA
+c0=0.8 # Fator de amortecimento VFSA
+
 
 for iter in range(2):
 
@@ -235,23 +238,23 @@ for iter in range(2):
 	out = 'out-%i'% (iter)
 
 	# VFSA
-	Flow([out,par],'pick',
+	Flow([out,par],'data',
 	'''
-	vfsa param=${TARGETS[1]} verb=%d app=%d m0=%g v0=%g
-	''' % (verb,app,m0,v0))
+	vfsaSemb param=${TARGETS[1]} verb=%d app=%d m0=%g v0=%g temp0=%g c0=%g
+	''' % (verb,app,m0,v0,temp0,c0))
 	
-	Plot('pick','grey color=j allpos=y title="CRS-Modelada" label2=Km scalebar=y')
+	Plot(['pick','bar'],'pick','grey color=j allpos=y title="SRC-Modelada" label3="Km" unit3="s" label2="PMC" unit2="Km" label1="Afastamento" unit1="Km" scalebar=y verb=y clip=3.65 bias=0 minval=0 maxval=3.65')
 	
 	# Gerar superfície aproximada e superfície de erro relativo absoluto
 	Flow(otm,['pick',par],
 	'''
 	crs param=${SOURCES[1]} verb=%d app=%d m0=%g v0=%g
 	''' % (verb,app,m0,v0))
-	Plot(otm,'grey color=j allpos=y title="CRS-Otimizada" label2=Km scalebar=y')
+	Plot(otm,'grey color=j allpos=y clip=3.65 title="SRC-Otimizada" label3="Km" unit3="s" label2="PMC" unit2="Km" label1="Afastamento" unit1="Km" scalebar=y verb=y bias=0 minval=0 maxval=3.65')
 
 	## Superficie de erro relativo absoluto (Aproximada - Modelada)
 	Flow(erro,[otm,'pick'],'add scale=1,-1 ${SOURCES[1]} | math output="abs(input)" ')
-	Plot(erro,'grey color=j allpos=y title="Erro relativo absoluto" label2=Km scalebar=y')
+	Plot(erro,'grey color=j allpos=y title="Erro Relativo Absoluto" label3="Km" unit3="s" label2="PMC" unit2="Km" label1="Afastamento" unit1="Km" scalebar=y verb=y clip=1 bias=0 minval=0 maxval=1')
 	Result(err,[erro, otm, 'pick'],'SideBySideAniso',vppen='txscale=1.5')
 
 End()
