@@ -88,6 +88,10 @@ int main(int argc, char* argv[])
 	bool verb; // Chave modo silencioso 0 e modo ativo 1
 	int app; // Id da aproximação de tempo de trânsito escolhida
 	float ***t; // Superfície de tempo de trânsito modelada (in.rsf)
+	float *rn_;
+	float *rnip_;
+	float *beta_;
+	float *semb_;
 	int im0; // índice da amostra do CMP central m0
 	float t0; // tempo de trânsito do raio normal
 	float temp; // temperatura na iteração 'q' do VFSA
@@ -125,10 +129,10 @@ int main(int argc, char* argv[])
 ***************************************************************************************************/
 	
 	/* Inicializa arquivos rsf*/
-	sf_file in, out,param;
+	sf_file in, out,param,rn_out,rnip_out,beta_out,semb_out;
 
 	/* Inicializa eixos */
-	sf_axis ax,ay,az;
+	sf_axis ax,ay,az,ae;
 
 	/* Permite receber variáveis pela linhas de comando */
 	sf_init(argc,argv); 
@@ -137,6 +141,10 @@ int main(int argc, char* argv[])
 	in = sf_input("in"); // Superficie de tempo de trânsito CRS modelada 
 	out = sf_output("out"); // Superfície de tempo de trânsito CRS aproximada
 	param = sf_output("param"); // Parâmetros do CRS otimizados (RN, RNIP, BETA)
+	rn_out = sf_output("rn_out");
+	rnip_out = sf_output("rnip_out");
+	beta_out = sf_output("beta_out");
+	semb_out = sf_output("semb_out");
 
 	if (!sf_getint("app",&app)) app=1;
 	/* Aproximação de tempo de trânsito CRS:  
@@ -207,6 +215,11 @@ int main(int argc, char* argv[])
 
 	/* Ler o cubo de dados */
 	t=sf_floatalloc3(nt,nh,nm);
+	rn_ = sf_floatalloc(itmax);
+	rnip_ = sf_floatalloc(itmax);
+	beta_ = sf_floatalloc(itmax);
+	semb_ = sf_floatalloc(itmax);
+
 
 	sf_floatread(t[0][0],nh*nm*nt,in);
 
@@ -371,6 +384,10 @@ int main(int argc, char* argv[])
 			 sf_error("Opção app=%i Não disponível", app);
 		}
 
+		rn_[q] = R_N;
+		rnip_[q] = R_NIP;
+		beta_[q] = BETA;
+		semb_[q] = semb;
 						
 		/* condição de convergência dos parâmetros no algoritmo VFSA */		
 		if(fabs(semb) > fabs(Em0) ){
@@ -421,6 +438,7 @@ int main(int argc, char* argv[])
 	sf_warning("Parâmetros otimizados:\n RN=%f, RNIP=%f, BETA=%f, SEMB=%f",otrn,otrnip,otbeta,otsemb);
 
 	/* eixo = sf_maxa(n,o,d)*/
+	ae = sf_maxa(itmax,0,1);
 	ax = sf_maxa(3, 0, 1);
 	ay = sf_maxa(1, 0, 1);
 	az = sf_maxa(1, 0, 1);
@@ -431,8 +449,29 @@ int main(int argc, char* argv[])
 	sf_oaxa(param,az,3);
 	sf_floatwrite(otm,3,param);
 
+	sf_oaxa(rn_out,ae,1);
+	sf_oaxa(rn_out,ay,2);
+	sf_oaxa(rn_out,az,3);
+
+	sf_oaxa(rnip_out,ae,1);
+	sf_oaxa(rnip_out,ay,2);
+	sf_oaxa(rnip_out,az,3);
+
+	sf_oaxa(beta_out,ae,1);
+	sf_oaxa(beta_out,ay,2);
+	sf_oaxa(beta_out,az,3);
+
+	sf_oaxa(semb_out,ae,1);
+	sf_oaxa(semb_out,ay,2);
+	sf_oaxa(semb_out,az,3);
+
 	/* Escrever a superfície otimizada no arquivo 'out'*/
 	sf_floatwrite(t[0],nm*nh,out);
+
+	sf_floatwrite(rn_,itmax,rn_out);
+	sf_floatwrite(rnip_,itmax,rnip_out);
+	sf_floatwrite(beta_,itmax,beta_out);
+	sf_floatwrite(semb_,itmax,semb_out);
 	
 	exit(0);
 }

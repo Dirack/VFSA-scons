@@ -225,7 +225,7 @@ temp0=10 # Temperatura inicial VFSA
 c0=0.8 # Fator de amortecimento VFSA
 
 
-for iter in range(2):
+for iter in range(1):
 
 	par = 'param-%i' % (iter)
 
@@ -237,10 +237,15 @@ for iter in range(2):
 
 	out = 'out-%i'% (iter)
 
+	rn_out = 'rn_out-%i'% (iter)
+	rnip_out = 'rnip_out-%i'% (iter)
+	beta_out = 'beta_out-%i'% (iter)
+	semb_out = 'semb_out-%i'% (iter)
+
 	# VFSA
-	Flow([out,par],'data',
+	Flow([out,par,rn_out,rnip_out,beta_out,semb_out],'data',
 	'''
-	vfsaSemb param=${TARGETS[1]} verb=%d app=%d m0=%g v0=%g temp0=%g c0=%g
+	vfsaSemb rn_out=${TARGETS[2]} rnip_out=${TARGETS[3]} beta_out=${TARGETS[4]} semb_out=${TARGETS[5]} param=${TARGETS[1]} verb=%d app=%d m0=%g v0=%g temp0=%g c0=%g
 	''' % (verb,app,m0,v0,temp0,c0))
 	
 	Plot(['pick','bar'],'pick','grey color=j allpos=y title="SRC-Modelada" label3="Km" unit3="s" label2="PMC" unit2="Km" label1="Afastamento" unit1="Km" scalebar=y verb=y clip=3.65 bias=0 minval=0 maxval=3.65')
@@ -256,5 +261,11 @@ for iter in range(2):
 	Flow(erro,[otm,'pick'],'add scale=1,-1 ${SOURCES[1]} | math output="abs(input)" ')
 	Plot(erro,'grey color=j allpos=y title="Erro Relativo Absoluto" label3="Km" unit3="s" label2="PMC" unit2="Km" label1="Afastamento" unit1="Km" scalebar=y verb=y clip=1 bias=0 minval=0 maxval=1')
 	Result(err,[erro, otm, 'pick'],'SideBySideAniso',vppen='txscale=1.5')
+
+	for var in [rn_out,rnip_out,beta_out,semb_out]:
+		Result(var,var,
+		'''
+		graph title=%s
+		''' % (var))
 
 End()
