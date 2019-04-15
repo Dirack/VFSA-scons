@@ -1,0 +1,18 @@
+# Importe a Biblioteca do madagascar 
+from rsf.proj import *
+
+Flow('cubo_out',['semb_out-0','rn_out-0','rnip_out-0','beta_out-0'],
+	'''
+	cubo rn_in=${SOURCES[1]} rnip_in=${SOURCES[2]} beta_in=${SOURCES[3]}
+	''')
+
+#Result('cubo_out','graph')
+
+Result('cubo_out',
+       '''
+       byte |
+       grey3 flat=n movie=3
+       title='Dados Modelo refletor gaussiano' point1=0.8 point2=0.8 
+       ''')
+
+End()
