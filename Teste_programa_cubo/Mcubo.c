@@ -43,7 +43,7 @@ int main(int argc, char* argv[]){
 	float *beta_;
 	float *semb_;
 	float ***cubo_;
-	int n,i;
+	int n,i,j,k;
 	int RN, RNIP, BETA;
 
 	/* ar é o eixo de RN e RNIP no cubo de coerência */
@@ -102,7 +102,25 @@ int main(int argc, char* argv[]){
 
 	cubo_ = sf_floatalloc3(250,250,314);	
 
-	//memset(cubo_[0][0],1.4E-11,250*250*314*sizeof(float));
+	for(i=0;i<314;i++){
+
+		BETA = i*0.02 -3.14;
+
+		for(j=0;j<250;j++){
+
+ 			RNIP = j*0.02;
+
+			for(k=0;k<250;k++){
+
+				RN = k*0.02;
+				cubo_[i][j][k]=1.15E-12;
+				//sf_warning("%f;%f;%f",RN,RNIP,BETA);
+
+			}
+
+		}
+
+	}
 
 	/* Inserir dados no cubo de coerência */
 	for(i=0;i<n;i++){
@@ -111,9 +129,9 @@ int main(int argc, char* argv[]){
 		RNIP = rnip_[i]/0.02;
 		BETA = (beta_[i]+3.14)/0.02;
 
-		sf_warning("%f\n",semb_[i]);
+		//sf_warning("%f\n",semb_[i]);
 
-		//cubo_[BETA][RNIP][RN] = semb_[i];
+		cubo_[BETA][RNIP][RN] = semb_[i];
 	}
 
 	/* Escrever a superfície otimizada no arquivo 'out'*/

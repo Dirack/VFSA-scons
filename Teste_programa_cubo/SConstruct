@@ -9,10 +9,11 @@ Flow('cubo_out',['semb_out-0','rn_out-0','rnip_out-0','beta_out-0'],
 #Result('cubo_out','graph')
 
 Result('cubo_out',
-       '''
-       byte |
-       grey3 flat=n movie=3
-       title='Dados Modelo refletor gaussiano' point1=0.8 point2=0.8 
-       ''')
+	'''
+	byte |
+	window min3=-0.5 max3=0.5
+	grey3 flat=n movie=3
+	title='Dados Modelo refletor gaussiano' point1=0.8 point2=0.8 
+	''')
 
 End()
